@@ -51,6 +51,7 @@ class Comment(db.Model):
         name = db.Column(db.String(255), nullable = False)
         text = db.Column(db.Text(), nullable = False)
         date = db.Column(db.DateTime())
+	remark = db.Column(db.String(255))
         post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
 
         def __repr__(self):
