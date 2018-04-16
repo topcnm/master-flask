@@ -7,4 +7,5 @@ class SomeConfig(object):
 
 class DevConfig(Config):
 	DEBUG = True
+	SECRET_KEY = 'I am a ... what'
 	SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}:{}/{}'.format('root', '123456', 'localhost', '3306', 'mastering')
