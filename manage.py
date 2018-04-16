@@ -1,12 +1,19 @@
 #coding:utf-8
 from flask_script import Manager
-from main import app, User, Post, db, Tag, Comment
+from flask_migrate import Migrate, MigrateCommand
+from main import app
+from ext import db
+from models import User, Post, Tag, Comment
 
 manager = Manager(app)
 
+migrate = Migrate(app, db)
+
+manager.add_command('db', MigrateCommand)
+
 @manager.command
 def say_hello():
-	return ('Hello Moto')
+	return ('Hello Moto 你妹啊！')
 
 @manager.shell
 def get_shell_context():
