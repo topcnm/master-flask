@@ -38,7 +38,7 @@ class Tag(db.Model):
         }
         id = db.Column(db.Integer, primary_key = True, autoincrement = True)
         title = db.Column(db.String(255), nullable = False)
-
+	remark = db.Column(db.String(255))
         def __repr__(self):
                 return "<Tag '{}'>".format(self.title)
 

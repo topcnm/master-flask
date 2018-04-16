@@ -9,7 +9,7 @@ db.init_app(app)
 
 @app.route("/")
 def home():
-	return 'Hello World888888888888888888888888'
+	return 'Hello World'
 
 @app.route("/search/<pageNo>")
 def get_user(pageNo):
