@@ -12,8 +12,8 @@ migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
 
 @manager.command
-def say_hello():
-	return ('Hello Moto 你妹啊！')
+def create_db():
+	db.create_all()	
 
 @manager.shell
 def get_shell_context():
