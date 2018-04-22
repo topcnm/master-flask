@@ -35,7 +35,7 @@ class Post(db.Model):
         }
         id = db.Column(db.Integer, primary_key = True, autoincrement = True)
         title = db.Column(db.String(64))
-     	text = db.Column(db.String(16777215))
+     	text = db.Column(db.Text)
         publish_date = db.Column(db.DateTime, default=datetime.datetime.now)
 	publish_able = db.Column(db.String(1))
         user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
