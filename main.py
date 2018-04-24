@@ -4,13 +4,14 @@ from functools import wraps
 import json
 import copy
 from config import DevConfig
-from ext import db
+from ext import db, bcrypt
 from models import User, Post
 from random import randint
 
 app = Flask(__name__)
 app.config.from_object(DevConfig)
 db.init_app(app)
+bcrypt.init_app(app)
 
 @app.before_request
 def before_request():
@@ -70,13 +71,14 @@ def logout():
 @app.route("/blog/register", methods=['post'])
 def create_user():
 	params = request.get_json()
-	user = User(username=params['username'], password=params['password'])
+	user = User(username=params['username'])
+	user.set_password(password=params['password'])
 	erps = copy.deepcopy(error_response)
 	db.session.add(user)
 	try:
 		db.session.commit()
-	except:  
-		erps['error'] = '新建错误'	
+	except Exception, e:  
+		erps['error'] = repr(e)	
 		return json.dumps(erps)
 
 	erps['success'] = True	

@@ -1,5 +1,5 @@
 #coding:utf-8
-from ext import db
+from ext import db, bcrypt
 import datetime
 
 class User(db.Model):
@@ -13,15 +13,23 @@ class User(db.Model):
 
         posts = db.relationship('Post', backref='user', lazy='dynamic')
 
-	def __init__(self, username, password):
+	def __init__(self, username):
 		self.username = username
-		self.password = password
 	
+	def set_password(self, password):
+		self.password = bcrypt.generate_password_hash(password)
+
+	def check_password(self, password):
+		return bcrypt.check_password_hash(self.password, password)		
+
 	@staticmethod
 	def get_user_by_username_and_password(username, password):
-		user = User.query.filter(User.username == username, User.password == password).first()
+		user = User.query.filter(User.username == username).first()
 		if user:
-			return user
+			if user.check_password(password):
+				return user
+			else:
+				return None
 		else:
 			return None
 '''
