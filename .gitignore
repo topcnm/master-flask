@@ -3,3 +3,4 @@
 migrations/
 menv/
 venv/
+.idea/
