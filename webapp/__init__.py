@@ -9,6 +9,7 @@ from models import User, Post
 from random import randint
 from controller.user import user
 from controller.post import post
+from controller.util import  error_response
 
 def create_app(config_name):
 	app = Flask(__name__)
@@ -24,11 +25,6 @@ def create_app(config_name):
 			g.userId = session['user_id']
 			print('i coming == {} =='.format(session['user_id']))
 
-	error_response = { 
-		'success': False, 
-		'result': None
-	 }
-		
 	@app.errorhandler(404)
 	def api_not_found(error):
 		response404 = copy.deepcopy(error_response)
@@ -40,16 +36,6 @@ def create_app(config_name):
 		response401 = copy.deepcopy(error_response)
 		response401['error'] = 'api 未授权'
 		return Response(json.dumps(response401), 401, mimetype='application/json')
-
-	# 登录要求
-	def login_required(func):
-		@wraps(func)
-		def wrapper(*args, **kwargs):
-			if 'user_id' in session:
-				return func(*args, **kwargs)
-			else:
-				return abort(401)
-		return wrapper
 
 	app.register_blueprint(user, url_prefix='/user')
 	app.register_blueprint(post, url_prefix='/post')

@@ -1,18 +1,15 @@
 #coding:utf-8
-from flask import Blueprint, request, Response, make_response
+from flask import Blueprint, g, request, Response, make_response
 import json
 import copy
 from webapp.ext import db
 from webapp.models import Post, User, Tag, Comment
+from util import login_required, error_response
 
 post = Blueprint('post', __name__)
 
-error_response = { 
-	'success': False, 
-	'result': None
- }
-
 @post.route("/create", methods=['post'])
+@login_required
 def post_article():
 	params = request.get_json()
 	print params

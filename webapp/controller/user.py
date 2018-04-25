@@ -4,13 +4,9 @@ import json
 import copy
 from webapp.ext import db
 from webapp.models import User
+from util import error_response, login_required
 
 user = Blueprint('user', __name__)
-
-error_response = { 
-	'success': False, 
-	'result': None
- }
 
 @user.route("/login", methods=['post'])
 def login():
@@ -29,6 +25,7 @@ def login():
 	return json.dumps(rps)
 
 @user.route("/logout", methods=['post'])
+@login_required
 def logout():
 	session.pop('user_id')
 	return make_response(json.dumps({'success': True}), 200)	
