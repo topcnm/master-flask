@@ -5,6 +5,7 @@ from flask_migrate import Migrate, MigrateCommand
 from webapp import create_app
 from webapp.ext import db
 from webapp.models import User, Post, Tag, Comment
+from db_command import InitManager
 
 env = os.environ.get('WEBAPP_ENV', 'dev')
 app = create_app('webapp.config.%sConfig'%env.capitalize())
@@ -15,6 +16,7 @@ migrate = Migrate(app, db)
 
 manager.add_command('server', Server())
 manager.add_command('db', MigrateCommand)
+manager.add_command('tag', InitManager)
 
 @manager.command
 def create_db():
