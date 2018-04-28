@@ -39,7 +39,7 @@ def get_blog_page():
 	print(start_item_no, end_item_no)
 	post_page = Post.query.filter(
 		Post.publish_able == 1, 
-		Post.tag_id == tag_id,
+		tag_id	and Post.tag_id == tag_id,
 		keyword and Post.title.like('%{}%'.format(keyword))
 	).paginate(start_item_no, end_item_no)
 	total = post_page.pages
