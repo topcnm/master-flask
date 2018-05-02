@@ -34,16 +34,17 @@ def get_blog_page():
 	tag_id = params['tagId']
 	page_no = int(params['pageNo'])
 	page_size = int(params['pageSize'])
-	start_item_no = (page_no - 1) * page_size + 1
-	end_item_no = page_no * page_size
-	print(start_item_no, end_item_no)
+	query_page_no = page_no
+	query_page_size = page_size
+	print(query_page_no, query_page_size, tag_id, keyword)
 	post_page = Post.query.filter(
 		Post.publish_able == 1, 
 		tag_id	and Post.tag_id == tag_id,
 		keyword and Post.title.like('%{}%'.format(keyword))
-	).paginate(start_item_no, end_item_no)
+	).paginate(query_page_no, query_page_size)
 	total = post_page.pages
 	posts = []
+	print(1111, post_page)
 	for i in post_page.items:
 		temp = {}
 		posts.append({
