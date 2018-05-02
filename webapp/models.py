@@ -12,6 +12,7 @@ class User(db.Model):
         password = db.Column(db.String(64), nullable = False)
 
         posts = db.relationship('Post', backref='user', lazy='dynamic')
+	albums = db.relationship('Album', backref='user', lazy='dynamic')
 
 	def __init__(self, username):
 		self.username = username
@@ -88,3 +89,28 @@ class Comment(db.Model):
 
         def __repr__(self):
                 return "<Comment '{}'>".format(self.text[:15])
+
+
+class Album(db.Model):
+	__tablename__ = 'album'
+	__table_args__ = {
+		'mysql_charset': 'utf8'
+	}
+	id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+	title = db.Column(db.String(64), nullable = False)
+	remark = db.Column(db.String(255), nullable = False)
+	front = db.Column(db.String(255))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+	pictures = db.relationship('Picture', backref='album', lazy='dynamic')
+
+class Picture(db.Model):
+	__tablename__ = 'picture'
+	__table_args__ = {
+		'mysql_charset': 'utf8'
+	}
+	id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+	remark = db.Column(db.String(255))
+	full_link = db.Column(db.String(255))
+	tiny_link = db.Column(db.String(255))
+	album_id = db.Column(db.Integer, db.ForeignKey('album.id'))

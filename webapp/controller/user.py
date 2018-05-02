@@ -15,6 +15,7 @@ def login():
 	rps = copy.deepcopy(error_response)
 	if user:
 		session['user_id'] = user.id
+		session['user_name'] = user.username
 		rps['success'] = True
 		rps['result'] = {
 			'username': user.username, 

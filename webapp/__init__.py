@@ -9,7 +9,8 @@ from models import User, Post
 from random import randint
 from controller.user import user
 from controller.post import post
-from controller.util import  error_response
+from controller.album import album
+from controller.util import error_response
 
 def create_app(config_name):
 	app = Flask(__name__)
@@ -24,6 +25,9 @@ def create_app(config_name):
 		if 'user_id' in session:
 			g.userId = session['user_id']
 			print('i coming == {} =='.format(session['user_id']))
+		if 'user_name' in session:
+			g.username = session['user_name']
+
 
 	@app.errorhandler(404)
 	def api_not_found(error):
@@ -39,5 +43,7 @@ def create_app(config_name):
 
 	app.register_blueprint(user, url_prefix='/user')
 	app.register_blueprint(post, url_prefix='/post')
+	app.register_blueprint(album, url_prefix='/album')
+
 					
 	return app
