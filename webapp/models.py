@@ -13,6 +13,7 @@ class User(db.Model):
 
         posts = db.relationship('Post', backref='user', lazy='dynamic')
 	albums = db.relationship('Album', backref='user', lazy='dynamic')
+	pictures = db.relationship('Picture', backref='user', lazy='dynamic')
 
 	def __init__(self, username):
 		self.username = username
@@ -114,3 +115,4 @@ class Picture(db.Model):
 	full_link = db.Column(db.String(255))
 	tiny_link = db.Column(db.String(255))
 	album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

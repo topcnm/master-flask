@@ -1,8 +1,12 @@
 #coding:utf-8
 from flask import Blueprint, request, g
 from random import randint
+from webapp.ext import db
+from webapp.models import Album, Picture
 import time, os, sys, re
 import imghdr
+import json
+import copy
 from util import login_required, error_response
 
 album = Blueprint('album', __name__)
@@ -16,15 +20,30 @@ def receive_album():
 	if upload_file:
 		t = time.strftime('%Y%m%d%H%M%S')
 		username = g.username
+		userId = g.userId
 		img_type = re.search('\.[a-z]{2,}$', upload_file.filename).group()
 
 		current_path = os.getcwd()
-	 	new_folder_path = current_path + '/static/{}'.format(username)
+	 	new_folder_path = current_path + '/static'
 		if not os.path.exists(new_folder_path):
 			os.makedirs(new_folder_path)
- 		upload_file.save('{}/{}.{}'.format(new_folder_path, t, img_type))
+		new_file_path = '{}/{}{}'.format(new_folder_path, t, img_type)
+		new_ref_file_path = '/static/{}{}'.format(t, img_type)
+ 		upload_file.save(new_file_path)
 		
-	return 'ttt'
+		# insert 
+		pic = Picture(remark='', full_link=new_file_path, user_id=userId)
+		db.session.add(pic)
+		db.session.commit()
+
+		reps = copy.deepcopy(error_response)
+		reps['success'] = True
+		reps['data'] = {
+			'fileName': upload_file.filename,
+			'filePath': new_ref_file_path,
+		} 	
+		return json.dumps(reps)
+	return json.dumps(error_response)
 
 # get the album list by user id
 @album.route('/list')
