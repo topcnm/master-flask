@@ -38,7 +38,7 @@ def receive_album():
 
 		reps = copy.deepcopy(error_response)
 		reps['success'] = True
-		reps['data'] = {
+		reps['result'] = {
 			'fileName': upload_file.filename,
 			'filePath': new_ref_file_path,
 		} 	
