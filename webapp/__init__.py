@@ -41,6 +41,13 @@ def create_app(config_name):
 		response401['error'] = 'api 未授权'
 		return Response(json.dumps(response401), 401, mimetype='application/json')
 
+	@app.errorhandler(413)
+	def file_too_big(error):
+		response413 = copy.deepcopy(error_response)
+		response413['error'] = '文件太大'
+		return Response(json.dumps(response413), 413, mimetype='application/json')
+
+
 	app.register_blueprint(user, url_prefix='/user')
 	app.register_blueprint(post, url_prefix='/post')
 	app.register_blueprint(album, url_prefix='/album')

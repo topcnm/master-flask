@@ -32,7 +32,7 @@ def receive_album():
  		upload_file.save(new_file_path)
 		
 		# insert 
-		pic = Picture(remark='', full_link=new_file_path, user_id=userId)
+		pic = Picture(remark='', full_link=new_ref_file_path, user_id=userId)
 		db.session.add(pic)
 		db.session.commit()
 
@@ -55,8 +55,30 @@ def get_album_list():
 def set_album_front_page():
 	pass
 
-# get the pic list by album id
-@album.route('/pic/list')
+# get the pic list by album id, if no album getted , return all picture
+@album.route('/pic/list', methods=['get'])
 def get_pic_list():
-	pass
+        params = request.args
+	# no album meaning is "get all uncategory pics"
+	albumId = params.get('albumId') or None
+	userId = params.get('userId')
+	print(albumId, userId)
+	pic_list = Picture.query.filter(
+		Picture.album_id == albumId,
+		Picture.user_id == userId
+	)
+	pics = []
+	for pic in pic_list:
+		pics.append({
+			'url': pic.full_link,
+			'id': pic.id,
+			'remark': pic.remark
+		})
+        resp = copy.deepcopy(error_response)
+	resp['success'] = True
+	resp['result'] = {
+		'total': len(pics),
+		'list': pics
+	}
+	return json.dumps(resp)
 

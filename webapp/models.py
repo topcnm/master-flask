@@ -100,6 +100,7 @@ class Album(db.Model):
 	id = db.Column(db.Integer, primary_key = True, autoincrement = True)
 	title = db.Column(db.String(64), nullable = False)
 	remark = db.Column(db.String(255), nullable = False)
+	publish_able = db.Column(db.String(16), default='1')
 	front = db.Column(db.String(255))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
