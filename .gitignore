@@ -5,3 +5,4 @@ menv/
 venv/
 .idea/
 static/
+webapp/config.*
