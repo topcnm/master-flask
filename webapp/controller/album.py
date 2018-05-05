@@ -103,6 +103,28 @@ def get_album_detail():
     return json.dumps(reps)
 
 
+@album.route('/setFront', methods=['post'])
+def set_front_page():
+    params = request.get_json()
+    user_id = g.userId
+    album_id = params.get('albumId')
+    pic_id = params.get('picId')
+
+    album = Album.query.filter(Album.id == album_id).first()
+    pic = Picture.query.filter(Picture.id == pic_id).first()
+
+    if album and pic and album.user_id == user_id and pic.user_id == user_id:
+        album.front = pic.full_link
+        db.session.commit()
+        reps = copy.deepcopy(error_response)
+        reps['success'] = True
+    else:
+        reps = copy.deepcopy(error_response)
+        reps['msg'] = 'Not Authorized'
+
+    return json.dumps(reps)
+
+
 @album.route('/delete', methods=['post'])
 @login_required
 def delete_album():
