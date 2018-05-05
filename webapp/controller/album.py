@@ -45,10 +45,81 @@ def receive_album():
 		return json.dumps(reps)
 	return json.dumps(error_response)
 
+@album.route('/create', methods=['post'])
+@login_required
+def create_album():
+	params = request.get_json()
+	userId = g.userId
+	title = params.get('title')
+	remark = params.get('remark')
+	publish_able = params.get('publishAble')
+	album = Album(user_id=userId, title=title, remark=remark, publish_able=publish_able)	
+	db.session.add(album)
+	try:
+		db.session.commit()
+		reps = copy.deepcopy(error_response)
+		reps['success'] = True
+		return json.dumps(reps)
+	except Exception, e :		
+		print(e)
+	        return json.dumps(error_response)
+
+@album.route('/delete', methods=['post'])
+@login_required
+def delete_album():
+	params = request.get_json()
+	userId = g.userId
+	album_id = params.get('albumId')
+	album = Album.query.filter(Album.id == album_id).first()
+	if album.user_id == userId:
+		db.session.delete(album)
+		db.session.commit()
+		reps = copy.deepcopy(error_response)
+		reps['success'] = True
+	else:
+    		reps = copy.deepcopy(error_response)
+		reps['msg']= 'No right to delete' 	
+		
+	return json.dumps(reps)
+
+
+@album.route('/pic/belong', methods=['post'])
+@login_required
+def set_pic_belong():
+        params = request.get_json()
+	album_Id = params.get('albumId')
+	pic_id_list = params.get('piclist').split(",")
+	user_id = g.userId
+	print(999, params)	
+	return 'finish'
+
+
 # get the album list by user id
-@album.route('/list')
+@album.route('/list', methods=['get'])
 def get_album_list():
-	pass
+	params = request.args
+	userId = params.get('userId')
+	
+	album_list = Album.query.filter(
+		Album.user_id == userId
+	)
+	albums = []
+	for album in album_list:
+		albums.append({
+			'id': album.id,
+			'title': album.title,
+			'front': album.front,
+			'remark': album.remark,
+			'userId': album.user_id,
+		})
+        resp = copy.deepcopy(error_response)
+	resp['success'] = True
+	resp['result'] = {
+		'total': len(albums),
+		'list': albums
+	}
+	return json.dumps(resp)
+
 
 # set the front-page for album
 @album.route('/front-page')

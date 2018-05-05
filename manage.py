@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 import os
 from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
@@ -8,7 +8,7 @@ from webapp.models import User, Post, Tag, Comment
 from db_command import InitManager
 
 env = os.environ.get('WEBAPP_ENV', 'dev')
-app = create_app('webapp.config.%sConfig'%env.capitalize())
+app = create_app('webapp.config.%sConfig' % env.capitalize())
 
 manager = Manager(app)
 
@@ -18,13 +18,16 @@ manager.add_command('server', Server())
 manager.add_command('db', MigrateCommand)
 manager.add_command('tag', InitManager)
 
+
 @manager.command
 def create_db():
-	db.create_all()	
+    db.create_all()
+
 
 @manager.shell
 def get_shell_context():
-	return dict(app=app, db=db, User=User, Post=Post, Tag=Tag, Comment=Comment)
+    return dict(app=app, db=db, User=User, Post=Post, Tag=Tag, Comment=Comment)
+
 
 if __name__ == '__main__':
-	manager.run()
+    manager.run()
