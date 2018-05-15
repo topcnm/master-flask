@@ -43,7 +43,7 @@ tags = db.Table('post_tags',db.Column('post_id', db.Integer, db.ForeignKey('post
 
 
 class Post(db.Model):
-    __tablename = 'post'
+    __tablename__ = 'post'
     __table_args__ = {
         'mysql_charset': 'utf8'
     }
@@ -52,6 +52,7 @@ class Post(db.Model):
     text = db.Column(db.Text)
     publish_date = db.Column(db.DateTime, default=datetime.datetime.now)
     publish_able = db.Column(db.String(1))
+    publish_state = db.Column(db.String(1))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tag_id = db.Column(db.Integer, db.ForeignKey('tag.id'))
 
